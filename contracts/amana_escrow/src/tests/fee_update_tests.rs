@@ -1,7 +1,7 @@
 /// Issue #751 — update_fee_bps tests
 // =============================================================================
 // Issue #12 — [Contract] Test that fee changes do not affect already-funded trades
-// https://github.com/Happybello365/innov8/issues/12
+// https://github.com/Happybello365/ISOLATE/issues/12
 //
 // ─── PROBLEM ─────────────────────────────────────────────────────────────────
 //

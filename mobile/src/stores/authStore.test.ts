@@ -20,7 +20,7 @@ describe('readTokenWithMigration', () => {
       k === 'amana_token' ? 'tok' : null,
     );
     await expect(readTokenWithMigration()).resolves.toBe('tok');
-    expect(set).toHaveBeenCalledWith('innov8_token', 'tok');
+    expect(set).toHaveBeenCalledWith('ISOLATE_token', 'tok');
     expect(del).toHaveBeenCalledWith('amana_token');
   });
 

@@ -2,7 +2,7 @@
 
 This document describes four open issues for the `amana_escrow` Soroban contract.
 All four target `contracts/amana_escrow/src/lib.rs` and are part of the
-[Drips Wave (Stellar Wave)](https://github.com/Happybello365/innov8) program.
+[Drips Wave (Stellar Wave)](https://github.com/Happybello365/ISOLATE) program.
 
 ---
 

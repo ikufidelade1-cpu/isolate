@@ -60,15 +60,15 @@ describe("Helmet security headers", () => {
 
 describe("CORS allowlist", () => {
   it("allows a request from a whitelisted origin", async () => {
-    const app = await buildApp("https://app.innov8.com");
+    const app = await buildApp("https://app.ISOLATE.com");
     const res = await request(app)
       .get("/health")
-      .set("Origin", "https://app.innov8.com");
-    expect(res.headers["access-control-allow-origin"]).toBe("https://app.innov8.com");
+      .set("Origin", "https://app.ISOLATE.com");
+    expect(res.headers["access-control-allow-origin"]).toBe("https://app.ISOLATE.com");
   });
 
   it("blocks a request from a non-whitelisted origin", async () => {
-    const app = await buildApp("https://app.innov8.com");
+    const app = await buildApp("https://app.ISOLATE.com");
     const res = await request(app)
       .options("/health")
       .set("Origin", "https://evil.example.com")
@@ -79,21 +79,21 @@ describe("CORS allowlist", () => {
   });
 
   it("allows multiple whitelisted origins", async () => {
-    const app = await buildApp("https://app.innov8.com,https://staging.innov8.com");
+    const app = await buildApp("https://app.ISOLATE.com,https://staging.ISOLATE.com");
 
     const res1 = await request(app)
       .get("/health")
-      .set("Origin", "https://app.innov8.com");
-    expect(res1.headers["access-control-allow-origin"]).toBe("https://app.innov8.com");
+      .set("Origin", "https://app.ISOLATE.com");
+    expect(res1.headers["access-control-allow-origin"]).toBe("https://app.ISOLATE.com");
 
     const res2 = await request(app)
       .get("/health")
-      .set("Origin", "https://staging.innov8.com");
-    expect(res2.headers["access-control-allow-origin"]).toBe("https://staging.innov8.com");
+      .set("Origin", "https://staging.ISOLATE.com");
+    expect(res2.headers["access-control-allow-origin"]).toBe("https://staging.ISOLATE.com");
   });
 
   it("permits server-to-server calls with no Origin header", async () => {
-    const app = await buildApp("https://app.innov8.com");
+    const app = await buildApp("https://app.ISOLATE.com");
     const res = await request(app).get("/health"); // no Origin
     expect(res.status).toBe(200);
   });

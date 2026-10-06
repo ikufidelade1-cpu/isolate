@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 
-const TOKEN_KEY = 'innov8_token';
+const TOKEN_KEY = 'ISOLATE_token';
 const LEGACY_TOKEN_KEY = 'amana_token';
 
 /** Reads the token, migrating it from the legacy key so sessions survive the rename. */

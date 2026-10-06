@@ -1,207 +1,275 @@
-# 🌾 innov8: Trust as a Service for Agricultural Products
+# Isolate — Trust as a Service for Agricultural Trade
 
-![Stellar](https://img.shields.io/badge/Network-Stellar-black?style=for-the-badge&logo=stellar)
-![Soroban](<https://img.shields.io/badge/Contracts-Soroban%20(Rust)-orange?style=for-the-badge>)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
-
-**innov8** is a decentralized escrow protocol designed to secure agricultural trade across different regions. By leveraging **Soroban Smart Contracts**, Amana eliminates the "Trust Gap" between buyers and sellers, ensuring fair trade even when parties are hundreds of miles apart.
-
-This is the main repository containing the smart contracts and orchestration logic. Backend, frontend, and mobile applications are maintained in this monorepo for simpler development and unified deployment.
+[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](./LICENSE)
+[![Stellar](https://img.shields.io/badge/Network-Stellar-black?style=for-the-badge&logo=stellar)](https://stellar.org)
+[![Soroban](https://img.shields.io/badge/Contracts-Soroban%20(Rust)-orange?style=for-the-badge)](https://soroban.stellar.org)
+[![CI](https://github.com/ikufidelade1-cpu/isolate/actions/workflows/ci.yml/badge.svg)](https://github.com/ikufidelade1-cpu/isolate/actions)
 
 ---
 
-## 🚀 The Mission
+## What Is Isolate?
 
-To provide a programmable safety net for regional commodity trading. Amana ensures that the risk of "sending first" is eliminated, replaced by a secure, neutral vault that only releases funds when delivery is verified.
+Isolate is a decentralized escrow protocol built on the Stellar blockchain that eliminates the trust gap in agricultural commodity trading. When a buyer in Lagos wants to purchase grain from a farmer in Kano, neither party wants to "send first." Isolate solves this with a programmable, neutral vault — powered by Soroban smart contracts — that holds funds securely until delivery is verified.
 
-## 🛠 Features
-
-- **Smart Escrow:** Secure funds holding using cNGN/stablecoins on the Stellar network.
-- **Dynamic Loss Sharing:** Negotiable risk-sharing ratios (e.g., 50/50, 70/30) hardcoded into every trade to handle transit accidents or theft.
-- **Proof-of-Delivery (PoD):** An optional video-based verification protocol involving the buyer and the driver to confirm the state of goods. Video evidence can be submitted and stored on IPFS for dispute resolution.
-- **Volatility Protection:** Utilizes Stellar Path Payments to allow users to pay in local currency (NGN) while locking value in cNGN.
-- **Automated Settlement:** A flat 1% platform fee is automatically deducted upon successful trade completion.
-
-## 🏗 Technical Stack
-
-- **Frontend:** [Next.js](https://nextjs.org/) (App Router)
-- **Smart Contracts:** [Soroban](https://soroban.stellar.org/) (Rust)
-- **Blockchain:** [Stellar Network](https://www.stellar.org/)
-- **Wallet Connection:** [Freighter](https://www.freighter.app/) / [Albedo](https://albedo.link/)
-- **Storage:** IPFS (via Pinata) for decentralized storage of video evidence.
-- **Database:** Supabase (Off-chain metadata, driver logs, and user profiles).
-- **Observability:** OpenTelemetry distributed tracing with correlation IDs for end-to-end request tracking.
-
-## 🧪 Local Environments (Folder-Based)
-
-- `frontend/` → Next.js app environment (UI + wallet + Supabase/Pinata client integration)
-- `backend/` → Node.js/TypeScript API environment (Supabase + Pinata + integration endpoints)
-- `mobile/` → React Native Expo environment (mobile wallet, notification, and trade UX)
-- `contracts/` → Rust/Soroban smart contract environment
-
-### Frontend setup
-
-1. `cd frontend`
-2. `cp .env.example .env.local`
-3. `npm install`
-4. `npm run dev`
-
-### Backend setup
-
-1. `cd backend`
-2. `cp .env.example .env`
-3. `cp .env.tracing.example .env.tracing` (for distributed tracing configuration)
-4. `npm install`
-5. `npm run dev`
-
-### Mobile setup
-
-1. `cd mobile`
-2. `cp .env.example .env.local`
-3. `npm install`
-4. `npm start`
-
-### Backend API docs
-
-- Source of truth: `backend/src/docs/openapi.yaml`
-- Dev Swagger UI: `http://localhost:4000/api/docs`
-- JSON export: `http://localhost:4000/api/docs/openapi.json`
-
-The backend writes `backend/src/docs/openapi.json` from the YAML spec in non-production runs so reviewers can inspect either format.
-
-### Contracts setup
-
-1. `cd contracts/amana_escrow`
-2. `cargo build`
-
-## 🔒 Required PR CI Gates
-
-Amana enforces stack-level CI gates on pull requests through `.github/workflows/ci.yml`.
-
-- **Frontend Required Gate**: `npm ci`, `npm run lint`, `npm run build`, `npm test` in `frontend/`
-- **Backend Required Gate**: `npm ci`, `npm run build`, `npm test` in `backend/`
-- **Mobile Required Gate**: `npm ci`, `npm run type-check`, `npm run lint` in `mobil
-Amana enforces stack-level CI gates on pull requests through `.github/workflows/ci.yml`.
-
-- **Frontend Required Gate**: `npm ci`, `npm run lint`, `npm run build`, `npm test` in `frontend/`
-- **Backend Required Gate**: `npm ci`, `npm run build`, `npm test` in `backend/`
-- **Mobile Required Gate**: `npm ci`, `npm run type-check`, `npm run lint` in `mobile/`
-- **Contracts Required Gate**: `cargo test` in `contracts/amana_escrow/`
-
-Path-aware execution is enabled to avoid unnecessary runtime. If a stack has no changed files, the gate reports a skip-note and passes.
-
-### Branch protection setup (GitHub)
-
-For the protected branch (`main`), set these required status checks:
-
-- `Frontend Required Gate`
-- `Backend Required Gate`
-- `Contracts Required Gate`
+No intermediary. No bank. No risk of sending first. Just smart contracts enforcing fair trade.
 
 ---
 
----
+## The Problem
 
-## 🔄 How It Works (The Amana Flow)
+Agricultural trade across regions is broken by a fundamental trust gap:
+- Sellers fear sending goods without payment
+- Buyers fear paying without receiving goods
+- Transit damage and theft create disputes with no resolution mechanism
+- Currency volatility erodes the value of agreed prices by delivery time
 
-1. **Initiate:** The Seller lists products. The Buyer initiates a trade, depositing funds that are converted to cNGN via a Stellar Path Payment.
-2. **Lock:** The Smart Contract locks the funds and stores the agreed-upon `Loss_Ratio`.
-3. **Dispatch:** The Seller provides the driver's name, phone number, and vehicle manifest.
-4. **Verification:** - **Success:** Buyer receives goods and uploads a confirmation video. Funds release to Seller.
-   - **Dispute:** Buyer uploads a video of loss/damage with driver affirmation. A mediator reviews the evidence.
-5. **Settlement:** Based on the outcome, funds are distributed (either 100% to one party or split via the `Loss_Ratio`).
-
----
-
-## 🗺 Roadmap
-
-### Phase 1: The Vault (MVP)
-
-- [x] Develop core Soroban contract logic (`deposit`, `release`, `refund`).
-- [x] Implement basic Next.js UI for trade creation.
-
-### Phase 2: The Agreement Engine
-
-- [x] Integrate `Loss_Ratio` variables into the smart contract.
-- [x] Build the "Mediator" dashboard for dispute resolution.
-
-### Phase 3: Evidence & Logistics
-
-- [x] IPFS integration for video evidence uploads.
-- [x] Driver manifest logging and tracking interface.
-
-### Phase 4: Mainnet & Scale
-
-- [ ] Public pilot program with regional agricultural cooperatives.
-- [x] Implementation of a "Trust Score" reputation system.
+Isolate addresses every one of these with on-chain primitives.
 
 ---
 
-## 🔍 Distributed Tracing
+## Key Features
 
-Amana includes comprehensive distributed tracing with OpenTelemetry for end-to-end request visibility and faster incident triage.
-
-### Features
-
-- **Correlation IDs**: Unique identifiers spanning frontend-backend requests
-- **Request Tracing**: Complete request lifecycle tracking
-- **Service Integration**: Automatic tracing for external services (IPFS, Stellar)
-- **Observability**: Jaeger, Zipkin, and Prometheus integration
-
-### Quick Start
-
-1. Configure tracing environment variables (see `backend/.env.tracing.example`)
-2. Start Jaeger for trace visualization: `docker run -p 16686:16686 jaegertracing/all-in-one`
-3. View traces at `http://localhost:16686`
-4. Check metrics at `http://localhost:9464/metrics`
-
-### Documentation
-
-See [DISTRIBUTED_TRACING_GUIDE.md](./DISTRIBUTED_TRACING_GUIDE.md) for detailed setup and usage instructions.
+| Feature | Description |
+|---------|-------------|
+| **Smart Escrow** | Funds locked in Soroban contract vault; released only on verified delivery |
+| **Dynamic Loss Sharing** | Negotiable risk ratios (50/50, 70/30, etc.) encoded into every trade |
+| **Proof of Delivery (PoD)** | Video-based delivery verification stored on IPFS via Pinata |
+| **Volatility Protection** | Stellar Path Payments let users pay in NGN while locking value in cNGN |
+| **Dispute Resolution** | Mediator quorum system for contested trades |
+| **Automated Settlement** | 1% platform fee deducted automatically on successful completion |
+| **Multi-Party Roles** | Buyer, seller, driver, and mediator roles enforced on-chain |
+| **Deadline Enforcement** | Configurable delivery deadlines with automatic refund on expiry |
 
 ---
 
-## 📐 Architecture Decision Records
+## How It Works
 
-Key architectural decisions are documented as ADRs in [`docs/adr/`](./docs/adr):
+```
+Buyer creates trade → funds locked in Soroban vault
+        │
+        ▼
+Seller confirms & dispatches goods
+        │
+        ▼
+Driver picks up → Proof-of-Delivery video captured
+        │
+        ▼
+Buyer verifies delivery on-chain
+        │
+        ├── Verified → funds released to seller (minus 1% fee)
+        └── Disputed → mediator quorum reviews PoD evidence → verdict executes
+```
 
-- [ADR-001: Stellar Path Payment Architecture](./docs/adr/ADR-001-stellar-path-payment-architecture.md)
-- [ADR-002: Escrow Loss-Sharing Model](./docs/adr/ADR-002-escrow-loss-sharing-model.md)
-- [ADR-003: Off-chain vs. On-chain Data Partitioning](./docs/adr/ADR-003-offchain-vs-onchain-data-partitioning.md)
-- [ADR-004: Idempotency and Retry Strategy](./docs/adr/ADR-004-idempotency-and-retry-strategy.md)
-- [ADR-005: Frontend State Management](./docs/adr/ADR-005-frontend-state-management.md)
+---
 
-## 🔐 Security & Operations
+## Architecture
 
-- [Security Policy](./SECURITY.md) — privately report vulnerabilities through GitHub's private vulnerability reporting.
-- [Threat Model](./docs/threat-model.md) — reviewed quarterly and on trigger events; see §8 for cadence/ownership and `docs/threat-model-review-checklist.md` for the reviewer checklist.
-- [Secrets Policy & Rotation](./docs/secrets-policy.md) — secrets inventory (owner, location, max-age), rotation automation, and verification. Rotation reminders are opened automatically by [`.github/workflows/secrets-rotation-reminder.yml`](./.github/workflows/secrets-rotation-reminder.yml).
-- [PII Encryption at Rest](./docs/pii-encryption.md) — classified PII column inventory, app-layer envelope encryption design, blind-index search, key rotation procedure, and decrypt access logging.
-- [Software Bill of Materials (SBOM)](./docs/sbom.md) — CycloneDX SBOM generated for every release artifact via [`.github/workflows/sbom.yml`](./.github/workflows/sbom.yml), attached to GitHub Releases, with a weekly vulnerability diff scan.
-- [Golden Signals Dashboard](./docs/dashboards.md) — Grafana dashboard stored as code ([`infra/grafana/`](./infra/grafana)) covering API latency/traffic/errors and DB/queue saturation, with deploy annotations wired into staging deploys.
-- [Alert Routing Policy](./docs/alert-routing-policy.md) — page-vs-ticket severity rubric, runbook linkage enforced in CI, per-alert dedup windows, and the [monthly alert review log](./docs/alert-review-log.md).
-- [Synthetic Probes Policy](./docs/synthetic-probes-policy.md) — hourly staging probe of the core escrow journey (auth → create → deposit → release), with failure alerting and a results dashboard log.
-- [Incident Response](./docs/runbooks/incident-response.md) — severity levels, incident roles, and channel/ticket conventions; see the [postmortem template](./docs/runbooks/postmortem-template.md), the [postmortem archive](./docs/postmortems/README.md), and a worked [tabletop exercise](./docs/runbooks/tabletop-exercise-escrow-drain.md).
+```
+┌─────────────────────────────────────────────────────┐
+│                    User Layer                       │
+│   Buyer · Seller · Driver · Mediator                │
+│   Freighter / Albedo Wallets                        │
+└────────────────────┬────────────────────────────────┘
+                     │
+┌────────────────────▼────────────────────────────────┐
+│               Frontend Layer                        │
+│   Next.js App Router · Stellar SDK · Supabase       │
+└──────────┬─────────────────────────┬────────────────┘
+           │                         │
+┌──────────▼──────────┐   ┌──────────▼──────────────┐
+│  Blockchain Layer   │   │      Backend Layer       │
+│  Stellar Network    │   │  Node.js · Express       │
+│  Soroban Contracts  │   │  REST API · OpenAPI      │
+│  Horizon API        │   │  Supabase · Pinata IPFS  │
+└─────────────────────┘   └──────────────────────────┘
+```
 
-## 🤝 Contributing
+For full architecture documentation see [docs/architecture.md](docs/architecture.md).
 
-innov8 is an open-source project aimed at improving food security and trade efficiency. We welcome developers, designers, and agricultural experts!
+---
 
-1. Fork the Project.
-2. Create your Feature Branch (`git checkout -b feature/NewFeature`).
-3. Commit your Changes (`git commit -m 'Add NewFeature'`).
-4. Push to the Branch (`git push origin feature/NewFeature`).
-5. Open a Pull Request.
+## Repository Layout
 
-### Admin route development
+```
+isolate/
+├── contracts/              # Soroban smart contracts (Rust)
+│   └── amana_escrow/
+│       └── src/
+│           ├── lib.rs       # Contract entry point
+│           ├── escrow.rs    # Trade lifecycle
+│           ├── delivery.rs  # PoD verification
+│           ├── dispute.rs   # Mediator quorum
+│           └── settlement.rs
+├── frontend/               # Next.js App Router
+├── backend/                # Node.js REST API + event indexer
+├── mobile/                 # Expo React Native
+├── shared-test-fixtures/   # Shared test helpers
+├── scripts/                # Build, deploy, codegen scripts
+├── docs/                   # Full documentation
+└── package.json            # Monorepo root (pnpm)
+```
 
-If you are adding or modifying admin routes, see the
-[Admin Route Contribution Guide](./docs/admin-route-contribution-guide.md)
-for architecture details, middleware requirements, testing expectations, and a
-step-by-step example.
+---
 
-## 📄 License
+## Smart Contract API
 
-Distributed under the MIT License. See `LICENSE` for more information.
+### Trade Lifecycle
+```rust
+create_trade(buyer, seller, amount, asset, deadline, loss_ratio) -> TradeId
+confirm_trade(trade_id, seller)
+cancel_trade(trade_id, caller)
+get_trade(trade_id) -> Trade
+```
 
-// setting up and starting out
+### Delivery & Verification
+```rust
+submit_delivery(trade_id, driver, ipfs_cid)
+verify_delivery(trade_id, buyer)
+reject_delivery(trade_id, buyer, reason)
+get_delivery_proof(trade_id) -> DeliveryProof
+```
+
+### Dispute Resolution
+```rust
+raise_dispute(trade_id, caller, evidence_cid)
+submit_mediator_vote(trade_id, mediator, verdict)
+resolve_dispute(trade_id)
+get_dispute(trade_id) -> Dispute
+```
+
+### Settlement
+```rust
+release_funds(trade_id)
+refund_buyer(trade_id)
+claim_platform_fee(trade_id)
+```
+
+### Emergency
+```rust
+pause_trade(trade_id, admin)
+unpause_trade(trade_id, admin)
+emergency_refund(trade_id, admin)
+```
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Smart Contracts | Rust · Soroban SDK |
+| Frontend | Next.js 14 (App Router) · TypeScript · Tailwind CSS · Stellar SDK |
+| Mobile | Expo · React Native · TypeScript |
+| Backend | Node.js · Express · TypeScript · OpenAPI/Swagger |
+| Storage | Supabase (off-chain metadata) · Pinata IPFS (PoD video) |
+| Blockchain | Stellar Network · Horizon API · Soroban RPC |
+| Observability | OpenTelemetry · distributed tracing · correlation IDs |
+| Build | pnpm · Turborepo |
+| Testing | Cargo test · Jest · Playwright |
+| CI/CD | GitHub Actions |
+
+---
+
+## Quick Start
+
+```bash
+# Clone
+git clone https://github.com/ikufidelade1-cpu/isolate.git
+cd isolate
+
+# Install dependencies
+pnpm install
+
+# Contracts
+cd contracts/amana_escrow && cargo build
+
+# Frontend
+cd frontend && cp .env.example .env.local && pnpm dev
+
+# Backend
+cd backend && cp .env.example .env && pnpm dev
+
+# Mobile
+cd mobile && cp .env.example .env.local && pnpm start
+```
+
+See [docs/local-development-setup.md](docs/local-development-setup.md) for the full environment guide.
+
+---
+
+## Supported Assets
+
+| Asset | Type | Use |
+|-------|------|-----|
+| XLM | Native | Default escrow asset |
+| cNGN | SEP-41 Token | Nigerian Naira stablecoin |
+| USDC | SEP-41 Token | USD stablecoin for cross-border |
+| Custom SEP-41 | Token | Any Stellar-issued asset |
+
+---
+
+## Supported Wallets
+
+| Wallet | Web | Mobile |
+|--------|-----|--------|
+| Freighter | ✅ | ✅ |
+| Albedo | ✅ | ❌ |
+| Lobstr | ✅ | ✅ |
+| WalletConnect | ✅ | ✅ |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [Architecture](docs/architecture.md) | System design and component interactions |
+| [Design Flows](docs/design-flows.md) | End-to-end trade and dispute flows |
+| [User Guide](docs/user-guide.md) | Step-by-step guide for all roles |
+| [Roadmap](docs/roadmap.md) | Versioned feature roadmap |
+| [Contributing](CONTRIBUTING.md) | How to contribute |
+| [API Reference](backend/src/docs/openapi.yaml) | Full REST API spec |
+| [Contract Errors](docs/contract-error-codes.md) | Soroban error code reference |
+| [Security](SECURITY.md) | Responsible disclosure policy |
+
+---
+
+## CI Gates
+
+All pull requests must pass:
+- Rust contract build + clippy + tests
+- Frontend lint + typecheck + tests
+- Backend lint + typecheck + tests + schema check
+- Secret scanning (gitleaks)
+- Dependency audit
+
+---
+
+## Roadmap Summary
+
+- **v1.0** — Core escrow (create, confirm, verify, release) on Testnet
+- **v1.1** — Dispute resolution + mediator quorum
+- **v2.0** — Proof-of-Delivery IPFS integration + mobile app
+- **v2.1** — cNGN/USDC multi-asset support + path payments
+- **v3.0** — Reputation system + trade history credit scoring
+- **v4.0** — Fiat on/off ramps + regional expansion
+
+See [docs/roadmap.md](docs/roadmap.md) for full detail.
+
+---
+
+## Contributing
+
+Issues labelled `good-first-issue` are great starting points. Funded issues are labelled `wave-ready`.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+
+---
+
+## License
+
+MIT © [ikufidelade1-cpu](https://github.com/ikufidelade1-cpu)
+
+---
+
+*Building trust infrastructure for agricultural trade on Stellar.*

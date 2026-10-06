@@ -1,7 +1,7 @@
 // =============================================================================
 // Issue #14 — [Contract] Snapshot test for get_trade_history ordering across
 // dispute paths
-// https://github.com/Happybello365/innov8/issues/14
+// https://github.com/Happybello365/ISOLATE/issues/14
 //
 // ─── PROBLEM ─────────────────────────────────────────────────────────────────
 //

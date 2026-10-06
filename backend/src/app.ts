@@ -33,7 +33,7 @@ import {
 
 /** Parse the CORS_ORIGINS env var into a usable allowlist.
  *  Value should be a comma-separated list of allowed origins, e.g.:
- *    CORS_ORIGINS=https://app.innov8.com,https://staging.innov8.com
+ *    CORS_ORIGINS=https://app.ISOLATE.com,https://staging.ISOLATE.com
  *  Leave empty in development to allow all origins.
  */
 function buildCorsOptions(): cors.CorsOptions {

@@ -64,7 +64,7 @@ spec:
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: innov8-secrets
+                  name: ISOLATE-secrets
                   key: REDIS_PASSWORD
             # Lets redis-cli in the probes authenticate without -a (which
             # prints a warning and exposes the password in the process list).

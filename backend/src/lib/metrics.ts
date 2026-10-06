@@ -1,6 +1,6 @@
 import { Counter, Histogram, metrics } from "@opentelemetry/api";
 
-const METER_NAME = "innov8-backend";
+const METER_NAME = "ISOLATE-backend";
 
 export type StellarTransactionOutcome =
   | "success"
@@ -356,10 +356,10 @@ export function recordReconciliationSweep(
 //   created → funded → delivered/released → refunded/disputed
 //
 // Naming convention:
-//   innov8_trades_<event>_total  — monotonic counters (cardinality-safe labels)
-//   innov8_trade_time_to_<phase>_ms — histograms for time-between-state durations
-//   innov8_trade_gmv_usdc        — histogram approximating GMV per trade
-//   innov8_dispute_rate_window   — gauge fed by a sliding-window dispute-rate alert helper
+//   ISOLATE_trades_<event>_total  — monotonic counters (cardinality-safe labels)
+//   ISOLATE_trade_time_to_<phase>_ms — histograms for time-between-state durations
+//   ISOLATE_trade_gmv_usdc        — histogram approximating GMV per trade
+//   ISOLATE_dispute_rate_window   — gauge fed by a sliding-window dispute-rate alert helper
 // ---------------------------------------------------------------------------
 
 export type TradeFunnelEvent =
@@ -399,7 +399,7 @@ let tradesFunnelCounter: Counter | undefined;
 
 function getTradesFunnelCounter(): Counter {
   if (!tradesFunnelCounter) {
-    tradesFunnelCounter = getMeter().createCounter("innov8_trades_total", {
+    tradesFunnelCounter = getMeter().createCounter("ISOLATE_trades_total", {
       description:
         "Total trade lifecycle transitions by event type. Use to build funnel: created→funded→released/refunded.",
     });
@@ -421,7 +421,7 @@ let timeToFundHistogram: Histogram | undefined;
 
 function getTimeToFundHistogram(): Histogram {
   if (!timeToFundHistogram) {
-    timeToFundHistogram = getMeter().createHistogram("innov8_trade_time_to_fund_ms", {
+    timeToFundHistogram = getMeter().createHistogram("ISOLATE_trade_time_to_fund_ms", {
       description: "Time from trade creation to escrow funded state, in milliseconds.",
       unit: "ms",
     });
@@ -439,7 +439,7 @@ let timeToReleaseHistogram: Histogram | undefined;
 
 function getTimeToReleaseHistogram(): Histogram {
   if (!timeToReleaseHistogram) {
-    timeToReleaseHistogram = getMeter().createHistogram("innov8_trade_time_to_release_ms", {
+    timeToReleaseHistogram = getMeter().createHistogram("ISOLATE_trade_time_to_release_ms", {
       description:
         "Time from escrow funded to funds released or refunded, in milliseconds. Tracks median settlement speed.",
       unit: "ms",
@@ -466,7 +466,7 @@ let tradeGmvHistogram: Histogram | undefined;
 
 function getTradeGmvHistogram(): Histogram {
   if (!tradeGmvHistogram) {
-    tradeGmvHistogram = getMeter().createHistogram("innov8_trade_gmv_usdc_cents", {
+    tradeGmvHistogram = getMeter().createHistogram("ISOLATE_trade_gmv_usdc_cents", {
       description:
         "Gross merchandise value per completed/released trade in USDC cents (amount * 100). Proxy for revenue scale.",
       unit: "1",
@@ -497,10 +497,10 @@ let disputeAnomalyCounter: Counter | undefined;
 
 function getDisputeAnomalyCounter(): Counter {
   if (!disputeAnomalyCounter) {
-    disputeAnomalyCounter = getMeter().createCounter("innov8_dispute_rate_anomalies_total", {
+    disputeAnomalyCounter = getMeter().createCounter("ISOLATE_dispute_rate_anomalies_total", {
       description:
         "Number of times the rolling dispute-rate window exceeded the anomaly threshold. " +
-        "Pair with innov8_trades_total{event='disputed'} for rate calculation.",
+        "Pair with ISOLATE_trades_total{event='disputed'} for rate calculation.",
     });
   }
   return disputeAnomalyCounter;

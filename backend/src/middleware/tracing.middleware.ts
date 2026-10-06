@@ -19,7 +19,7 @@ export function tracingMiddleware(
   res: Response,
   next: NextFunction,
 ): void {
-  const tracer = trace.getTracer('innov8-backend');
+  const tracer = trace.getTracer('ISOLATE-backend');
   const tracedReq = req as TracedRequest;
   
   // Extract route information if available (Express sets this after routing)

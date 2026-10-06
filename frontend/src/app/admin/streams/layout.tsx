@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
  */
 export const metadata: Metadata = {
   title: "Stream Management",
-  description: "Monitor and manage active payment streams on the innov8 platform.",
+  description: "Monitor and manage active payment streams on the ISOLATE platform.",
 };
 
 export default function AdminStreamsLayout({ children }: { children: ReactNode }) {

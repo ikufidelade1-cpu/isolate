@@ -17,18 +17,18 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: kingfrankhood/innov8-frontend:latest
+          image: kingfrankhood/ISOLATE-frontend:latest
           ports:
             - containerPort: 3000
               name: http
           envFrom:
             - configMapRef:
-                name: innov8-config
+                name: ISOLATE-config
           env:
             - name: PINATA_JWT
               valueFrom:
                 secretKeyRef:
-                  name: innov8-secrets
+                  name: ISOLATE-secrets
                   key: PINATA_JWT
           resources:
             requests:

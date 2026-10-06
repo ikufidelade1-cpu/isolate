@@ -1039,7 +1039,7 @@ impl EscrowContract {
         if env.storage().instance().has(&DataKey::Initialized) {
             // ================================================================
             // Issue #6 — Replace panic! with typed contract errors
-            // https://github.com/Happybello365/innov8/issues/6
+            // https://github.com/Happybello365/ISOLATE/issues/6
             //
             // PROBLEM: panic!("AlreadyInitialized") is surfaced to clients as
             // a generic host error. The typed Error enum already exists; use it.
@@ -1915,7 +1915,7 @@ impl EscrowContract {
 
         // ================================================================
         // Issue #6 — Replace panic! with typed contract errors
-        // https://github.com/Happybello365/innov8/issues/6
+        // https://github.com/Happybello365/ISOLATE/issues/6
         //
         // PROBLEM: panic!("Unauthorized mediator") is a generic host error.
         //
@@ -2197,7 +2197,7 @@ impl EscrowContract {
         // =====================================================================
         // Issue #11 — [Contract] Expose a version() entrypoint for deploy
         // verification
-        // https://github.com/Happybello365/innov8/issues/11
+        // https://github.com/Happybello365/ISOLATE/issues/11
         //
         // PROBLEM
         // -------
@@ -2494,7 +2494,7 @@ impl EscrowContract {
         } else {
             // ================================================================
             // Issue #6 — Replace panic! with typed contract errors
-            // https://github.com/Happybello365/innov8/issues/6
+            // https://github.com/Happybello365/ISOLATE/issues/6
             //
             // PROBLEM: panic!("Cannot cancel trade in current status") is a
             // generic host error.
@@ -3602,7 +3602,7 @@ impl EscrowContract {
     ///
     // =========================================================================
     // Issue #8 — Bound the number of evidence records per trade
-    // https://github.com/Happybello365/innov8/issues/8
+    // https://github.com/Happybello365/ISOLATE/issues/8
     //
     // PROBLEM
     // -------
@@ -3672,7 +3672,7 @@ impl EscrowContract {
     //   docs/contract-error-codes.md          ← add EvidenceLimitExceeded
     // =========================================================================
     // Issue #10 — Add a lightweight get_trade_status getter
-    // https://github.com/Happybello365/innov8/issues/10
+    // https://github.com/Happybello365/ISOLATE/issues/10
     //
     // NOTE: get_trade_status is a new READ-ONLY entry point, not a change to
     // submit_evidence. It is documented here because submit_evidence is the
@@ -3851,7 +3851,7 @@ impl EscrowContract {
     ///
     // =========================================================================
     // Issue #7 — Stricter IPFS CID validation in submit_video_proof
-    // https://github.com/Happybello365/innov8/issues/7
+    // https://github.com/Happybello365/ISOLATE/issues/7
     //
     // PROBLEM
     // -------
@@ -4126,7 +4126,7 @@ impl EscrowContract {
         // =====================================================================
         // Issue #9 — [Contract] Return a named ContractMetrics struct from
         // get_contract_metrics
-        // https://github.com/Happybello365/innov8/issues/9
+        // https://github.com/Happybello365/ISOLATE/issues/9
         //
         // PROBLEM
         // -------
